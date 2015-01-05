@@ -7,6 +7,9 @@
 #
 #########
 
+Pre=$(Fry)/prefix
+Ext=$(Fry)/Ext
+
 typo:
 	- git status
 	- git commit -am "typo"
@@ -24,13 +27,28 @@ status:
 	- git status
 
 
-ready:
+ready : dirs verbatims
+
+dirs: 
 	mkdir -p $(Raw)/verbatim
+	mkdir -p $(Out)/slides
 
 
 verbatims:
-	@cp -vrup $(Raw)verbatim/* $(Out)
+	@cp -vrup $(Raw)/verbatim/* $(Out)
 	@cd $(Out); git add --all; git commit -am "autoadd"
 
-$(Out)slides/%.html : $(Raw)slides/%.md
-	pandoc -s --webtex -i -t slidy  -c ../img/slidy.css -o $@ $<
+
+
+Slides0=$(shell ls $(Raw)/slides; ls *.md)
+Slides=$(subst .md,.html,$(Slides0))
+
+slides: ready $(Out)/slides/$(subst .html ,.html $(Out)/slides/,$(Slides))
+
+debug:
+	echo $(Raw)/slides
+	echo  $(Slides)
+
+$(Out)/slides/%.html : $(Raw)/slides/%.md
+	@pandoc -s --webtex -i -t slidy  -c ../img/slidy.css -o $@ $<
+	git add $<

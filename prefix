@@ -1,4 +1,3 @@
 #!/bin/bash
-echo $1
 cat - |
 awk '{ print "'$1'" $1 }'
