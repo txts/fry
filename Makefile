@@ -12,34 +12,26 @@ Dirs=$(Fry) $(Raw) $(Out)
 Pre=$(Fry)/prefix
 Ext=$(Fry)/Ext
 
-
 typo:
 	- git status
 	- git commit -am "typo"
 	- git push origin master
-
-typos:
-	$(foreach d,$(Dirs), cd $d; $(MAKE) typo;)
 
 commit:
 	- git status
 	- git commit -a
 	- git push origin master
 
-commits:
-	cd $(Fry); $(MAKE) commit
-	cd $(Raw); $(MAKE) commit
-	cd $(Out); $(MAKE) commit
-
-
 update:
 	- git pull origin master
-
-
 
 status:
 	- git status
 
+typos  :; $(foreach d,$(Dirs), cd $d; $(MAKE) typo;  )
+commits:; $(foreach d,$(Dirs), cd $d; $(MAKE) commit;)
+updates:; $(foreach d,$(Dirs), cd $d; $(MAKE) update;)
+statuss:; $(foreach d,$(Dirs), cd $d; $(MAKE) status;)
 
 
 ready : dirs verbatims
