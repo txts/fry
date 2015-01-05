@@ -7,6 +7,8 @@
 #
 #########
 
+Dirs=$(Fry) $(Raw) $(Out)
+
 Pre=$(Fry)/prefix
 Ext=$(Fry)/Ext
 
@@ -17,9 +19,7 @@ typo:
 	- git push origin master
 
 typos:
-	cd $(Fry); $(MAKE) typo
-	cd $(Raw); $(MAKE) typo
-	cd $(Out); $(MAKE) typo
+	$(foreach d,$(Dirs), cd $d; echo $d; $(MAKE) typo;)
 
 commit:
 	- git status
@@ -35,8 +35,11 @@ commits:
 update:
 	- git pull origin master
 
+
+
 status:
 	- git status
+
 
 
 ready : dirs verbatims
