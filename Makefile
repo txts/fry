@@ -19,7 +19,7 @@ typo:
 	- git push origin master
 
 typos:
-	$(foreach d,$(Dirs), cd $d; echo $d; $(MAKE) typo;)
+	$(foreach d,$(Dirs), cd $d; $(MAKE) typo;)
 
 commit:
 	- git status
