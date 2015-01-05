@@ -10,15 +10,27 @@
 Pre=$(Fry)/prefix
 Ext=$(Fry)/Ext
 
+
 typo:
 	- git status
 	- git commit -am "typo"
 	- git push origin master
 
+typos:
+	cd $(Fry); $(MAKE) typo
+	cd $(Raw); $(MAKE) typo
+	cd $(Out); $(MAKE) typo
+
 commit:
 	- git status
 	- git commit -a
 	- git push origin master
+
+commits:
+	cd $(Fry); $(MAKE) commit
+	cd $(Raw); $(MAKE) commit
+	cd $(Out); $(MAKE) commit
+
 
 update:
 	- git pull origin master
