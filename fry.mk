@@ -51,12 +51,12 @@ statuz :; @$(foreach d,$(Dirs), cd $d; $(call hi,$d); $(MAKE) -s status;)
 
 Skeleton=dot etc plot slides verbatim/img
 dirs: 
-	$(foreach d,$(Skeleton),mkdir -p $(Raw)/$d(Raw))
+	$(foreach d,$(Skeleton),mkdir -p $(Raw)/$d;)
 	mkdir -p $(Out)/slides
 	mkdir -p $(Out)/img/dot
 	mkdir -p $(Out)/img/plot
 	cp -vrup $(Fry)/etc $(Raw)
-	cp -vrup $(Fry)/slidy.css $(Raw)/verbatim
+	cp -vrup $(Fry)/img/slidy.css $(Raw)/verbatim/img
 
 verbatims:
 	cp -vrup $(Raw)/verbatim/* $(Out)
