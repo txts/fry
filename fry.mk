@@ -11,10 +11,19 @@ Dirs=$(Fry) $(Raw) $(Out)
 
 Pre=$(Fry)/prefix
 Ext=$(Fry)/Ext
+
 define hi
  echo "\n\n===| $(1) |==========================\n"
 endef 
 
+define target
+   $(subst $4,$5,\
+      $(subst .$2,.$3,\
+         $(shell ls $(Raw)/$1/*.$2)))
+endef
+
+addll:
+	git add --all 
 
 typo:
 	- git status
@@ -32,31 +41,34 @@ update:
 status:
 	- git status
 
+addalls:; @$(foreach d,$(Dirs), cd $d; $(call hi,$d); git add --all;)
 typos:;   @$(foreach d,$(Dirs), cd $d; $(call hi,$d); $(MAKE) -s typo;)
 commits:; @$(foreach d,$(Dirs), cd $d; $(call hi,$d); $(MAKE) -s commit;)
 updates:; @$(foreach d,$(Dirs), cd $d; $(call hi,$d); $(MAKE) -s update;)
 statuz :; @$(foreach d,$(Dirs), cd $d; $(call hi,$d); $(MAKE) -s status;)
 
-ready : dirs verbatims slides
+ready : dirs verbatims talks
 
 dirs: 
 	mkdir -p $(Raw)/verbatim
+	mkdir -p $(Raw)/dot
+	mkdir -p $(Raw)/slides
 	mkdir -p $(Out)/slides
+	mkdir -p $(Out)/img/dot
 
 verbatims:
 	cp -vrup $(Raw)/verbatim/* $(Out)
-	@cd $(Out); git add --all; git commit -am "autoadd"
 
+talks: 
+	echo 1
+	echo $(call target,slides/*.md,.md,.html)
 
-Slides0=$(shell ls $(Raw)/slides; ls *.md)
-Slides=$(subst .md,.html,$(Slides0))
-
-slides: $(Out)/slides/$(subst .html ,.html $(Out)/slides/,$(Slides))
-
-debug:
-	echo $(Raw)/slides
-	echo  $(Slides)
+slides: $(call target,slides,md,html,$(Raw),$(Out))
+dots  : $(call target,dot,dot,png,$(Raw),$(Out)/img)
 
 $(Out)/slides/%.html : $(Raw)/slides/%.md
 	@pandoc -s --webtex -i -t slidy  -c ../img/slidy.css -o $@ $<
 	git add $<
+
+$(Out)/img/dot/%.png : $(Raw)/dot/%.dot
+	@dot -Tpng -o $@ $<
