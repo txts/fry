@@ -51,15 +51,15 @@ statuz :; @$(foreach d,$(Dirs), cd $d; $(call hi,$d); $(MAKE) -s status;)
 
 Skeleton=dot etc plot slides verbatim/img
 dirs: 
-	$(foreach d,$(Skeleton),mkdir -p $(Raw)/$d;)
-	mkdir -p $(Out)/slides
-	mkdir -p $(Out)/img/dot
-	mkdir -p $(Out)/img/plot
-	cp -vrup $(Fry)/etc $(Raw)
-	cp -vrup $(Fry)/img/slidy.css $(Raw)/verbatim/img
+	@$(foreach d,$(Skeleton),mkdir -p $(Raw)/$d;)
+	@mkdir -p $(Out)/slides
+	@mkdir -p $(Out)/img/dot
+	@mkdir -p $(Out)/img/plot
+	@cp -vrup $(Fry)/etc $(Raw)
+	@cp -vrup $(Fry)/img/slidy.css $(Raw)/verbatim/img
 
 verbatims:
-	cp -vrup $(Raw)/verbatim/* $(Out)
+	@cp -vrup $(Raw)/verbatim/* $(Out)
 
 talks:  $(call target,slides,md,html,$(Raw),$(Out))
 dots  : $(call target,dot,dot,png,$(Raw),$(Out)/img)
@@ -72,12 +72,15 @@ $(Out)/slides/%.html : $(Raw)/slides/%.md
               --biblio $(Raw)/biblio.bib \
 	      -c        ../img/slidy.css \
               -o $@ $<
+	touch $@
 
 $(Out)/img/dot/%.png : $(Raw)/dot/%.dot
 	dot -Tpng -o $@ $<
+	touch $@
 
 $(Out)/img/plot/%.png : $(Raw)/plot/%.plt
 	gnuplot $< > $@
+	touch $@
 
 overRideSomething:
 	@echo do something
